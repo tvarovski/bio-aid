@@ -16,3 +16,21 @@ To easily import and access the functions inside of the bio-aid package, include
 ```python
 import BioAid as ba
 ```
+### Diluter
+This simple program calculates volumes for serial dilutions of yeast cultures, that can subsequently be used for colony plating. To access diluter, in `python` type:
+```python
+ba.dilute()
+```
+and follow instructions on the prompt.
+
+### PopDub
+Utillity for finding population doublings for the Telomere project.
+
+To get results you will need to adjust initial and final population densities:
+- set `initial_population` to the cell count on the beginning of your experiment used as inoculum.
+- set `final_population_ml` to the /ml cell count at the time you want to measure population doublings.
+- set `final_culture_volume` to the volume of your final culture.
+Finally, run the function:
+```python
+calculatePopulationDoublings(initial_population, final_population_ml, final_culture_volume)
+```
