@@ -3,7 +3,7 @@ import codecs
 import os
 
 
-VERSION = '0.1.0'
+VERSION = '0.1.5'
 DESCRIPTION = 'Genetic Analysis Tools'
 LONG_DESCRIPTION = 'A package that contains tools for the analysis of genetic sequence and sequencing related data'
 
@@ -17,7 +17,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    install_requires=['pandas', 'numpy', 'matplotlib', 'seaborn', 'regex'],
+    install_requires=['pandas', 'numpy', 'matplotlib', 'seaborn', 'regex', 'pyensembl', 'natsort'],
     keywords=['python', 'biology', 'bio', 'genetics', 'genomics', 'NGS'],
     classifiers=[
         "Intended Audience :: Developers",
