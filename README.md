@@ -32,7 +32,7 @@ To get results you will need to adjust initial and final population densities:
 
 Finally, run the function:
 ```python
-calculatePopulationDoublings(initial_population, final_population_ml, final_culture_volume)
+ba.calculatePopulationDoublings(initial_population, final_population_ml, final_culture_volume)
 ```
 ## RepeatSearch
 This tool allows for search of imperfect repeats (Inverted and Direct) in a DNA sequence. Diagram explaining the parameters can be found in the stand-alone repo [here](https://github.com/tvarovski/RepeatSearchTools) 
