@@ -3,7 +3,7 @@ import codecs
 import os
 
 
-VERSION = '0.1.5'
+VERSION = '0.1.6'
 DESCRIPTION = 'Genetic Analysis Tools'
 LONG_DESCRIPTION = 'A package that contains tools for the analysis of genetic sequence and sequencing related data'
 
