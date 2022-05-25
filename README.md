@@ -8,7 +8,6 @@ The latest release of the bio-aid package can be installed through pip (https://
 ```bash
 pip install --upgrade bio-aid
 ```
-## Basic Usage
 bio-aid currently consists of a base module and three sub modules: `deepSeqInsH`, `MMBSearchTK`, `varaintTK`.
 
 To easily import and access the functions inside of the bio-aid package, include the following in your `python` scripts:
@@ -16,14 +15,14 @@ To easily import and access the functions inside of the bio-aid package, include
 ```python
 import BioAid as ba
 ```
-### Diluter
+## Diluter
 This simple program calculates volumes for serial dilutions of yeast cultures, that can subsequently be used for colony plating. To access diluter, in `python` type:
 ```python
 ba.dilute()
 ```
 and follow instructions on the prompt.
 
-### PopDub
+## PopDub
 Utillity for finding population doublings for the Telomere project.
 
 To get results you will need to adjust initial and final population densities:
@@ -35,7 +34,7 @@ Finally, run the function:
 ```python
 calculatePopulationDoublings(initial_population, final_population_ml, final_culture_volume)
 ```
-### RepeatSearch
+## RepeatSearch
 This tool allows for search of imperfect repeats (Inverted and Direct) in a DNA sequence. Diagram explaining the parameters can be found in the stand-alone repo [here](https://github.com/tvarovski/RepeatSearchTools) 
 
 ```python
