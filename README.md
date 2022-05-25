@@ -50,7 +50,8 @@ min_homology=0.8          # Sets minimum homology treshold (a fraction) when imp
 fixed_errors=1            # Sets maximum number of errors (del/sub) when imperfect_homology=True (set to False or to an integer)
 
 # To run the Search execute the following:
-results_dictionary = ba.searchSequenceForRepeats(sequence=sequence,
+results_dictionary = ba.searchSequenceForRepeats(
+                         sequence=sequence,
                          min_query_length=min_query_length,
                          max_query_length=max_query_length,
                          min_spacer=min_spacer,
@@ -58,8 +59,7 @@ results_dictionary = ba.searchSequenceForRepeats(sequence=sequence,
                          imperfect_homology=imperfect_homology,
                          min_homology=min_homology,
                          fixed_errors=fixed_errors,
-                         inverted=inverted
-                         )
+                         inverted=inverted)
 
 ```
 
