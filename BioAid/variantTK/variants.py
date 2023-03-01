@@ -1,3 +1,22 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## qualitySNPFilter
+## filterByAD
+## findDominantAF
+## findType
+## findZygosity
+## filterFromClones
+## drawSNPMap
+## findGenomeLength
+## generateRandomLoci
+## findChrInLinearGenome
+## findSpectraStrandwise
+## renameChrToRoman
+## draw_random_SNPMap
+## drawCombinedSNPMap
+
 import os
 import random
 import numpy as np
@@ -285,4 +304,3 @@ def drawCombinedSNPMap(pd_df, df_chr_lengths, chr_starts_df, title, sample_names
 
   if saveMap:
     plt.savefig('figures/'+title+'.png', transparent=False, dpi=600)
-

@@ -1,3 +1,15 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## extractSeqFromFastaToList
+## validateSquence
+## compl
+## rev_compl
+## unique
+## createChrList
+## dataFrameImport
+
 def extractSeqFromFastaToList(fasta_file_path):
   '''This function takes a path of a fastafile and extracts all sequence names and
   sequences into a nested list [[title_0, sequence_0], [title_1, sequence_1],...]'''
@@ -60,6 +72,8 @@ def createChrList(chrNum):
   return(chrList)
 
 def dataFrameImport(directory):
+  import os
+  import pandas as pd
   frames_list_samples = []
   sample_names = []
 

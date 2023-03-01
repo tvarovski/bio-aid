@@ -1,8 +1,18 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## wordsInSequence
+## findComplexity
+## movingWindow
+## createLogFile
+## createSequenceList
+## createDataFrameFromLogFile
+
 import pandas as pd
 import ast
 from pandas import DataFrame
 from .base import unique
-
 
 def wordsInSequence(sequence, treeLevel):
   # takes a genetic sequence and a treeLevel (word length) and returns
@@ -32,13 +42,13 @@ def findComplexity(sequence, treeLevel, complexity_threshold):
 
   return ([complexity, treeLevel, sequence])
 
-def movingWindow(sequence, treeLevel=8, chunkSize=20, complexity_threshold = 0.2, showGraph = False):
+def movingWindow(sequence, treeLevel=8, chunkSize=20, complexity_threshold=0.2, showGraph=False):
   # takes a genetic sequence and calculates the linguistic complexity scores
   # for windows of size chunkSize for word lengths from 1 to treeLevel.
-  # returns the lowest score window in format:  
+  # returns the lowest score window in format:
   # [Boolean, [complexity, treeLevel, sequence]] where Boolean denotes if the
   # complexity score is lower (True) than complexity_threshold
-  # optional: draw the complexity graph for the length of the sequence 
+  # optional: draw the complexity graph for the length of the sequence
   # by setting showGraph = True
 
   complexityList=[]
@@ -49,13 +59,20 @@ def movingWindow(sequence, treeLevel=8, chunkSize=20, complexity_threshold = 0.2
       chunkSeq = sequence[chunk:(chunk+chunkSize)]
       complexityList.append(findComplexity(chunkSeq, i, complexity_threshold))
 
-  lowest=min(complexityList, key=lambda x: x[0])
+  try:
+    lowest=min(complexityList, key=lambda x: x[0])
+
+  except ValueError:
+    print(f"ERROR with sequence: {sequence}. It is probably too short len={len(sequence)}. Skipping it.")
+    print("complexityList: ", complexityList)
+    lowest = [0,0,0]
 
   #print(complexityList)
 
   lowLvl=lowest[1]
 
   if showGraph:
+
     df = DataFrame(complexityList,columns=['complexity','tree','sequence'])
     df = df[['complexity','tree']]
     ax = df[df.tree == lowLvl].filter(items=["complexity"]).plot(fontsize=15, grid=True, figsize=(20,8))
@@ -65,9 +82,11 @@ def movingWindow(sequence, treeLevel=8, chunkSize=20, complexity_threshold = 0.2
     ax.set_title(lowest[2])
 
   if lowest[0] < complexity_threshold:
-    return([True, lowest])
+    return([True, lowest[0], lowest[1]])
+    #return([True, lowest])
   else:
-    return ([False, lowest])
+    return([False, lowest[0], lowest[1]])
+    #return([False, lowest])
 
 def createLogFile(seqlist, filename, complexity_threshold = 0.2, chunkSize=20):
   # takes a list of sequences for analysis, the name of the output file,

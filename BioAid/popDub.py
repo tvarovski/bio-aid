@@ -1,3 +1,6 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
 def calculatePopulationDoublings(initial_population, final_population_ml, final_culture_volume):
     final_population = final_population_ml * final_culture_volume
     doubling_cycle_size = final_population

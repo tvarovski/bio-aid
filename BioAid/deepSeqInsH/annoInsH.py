@@ -1,3 +1,13 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## dataFrameImport
+## matchSequence
+## findReadLength
+## trimseq
+## classify
+
 import sys
 import pysam
 import regex as re
@@ -15,6 +25,8 @@ def dataFrameImport(directory,datatype = 'sam'):
   sample_names = []
 
   counter=1
+
+  #import all files in the directory
   for filename in os.listdir(directory):
       if filename.endswith(f".{datatype}"):
           sample_names.append(filename[:8].strip())

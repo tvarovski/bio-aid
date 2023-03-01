@@ -1,3 +1,6 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
 import regex as re
 
 def createMMBSearchReference(file_path_in, file_path_out):

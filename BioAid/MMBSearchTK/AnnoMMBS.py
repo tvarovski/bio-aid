@@ -1,6 +1,16 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## verifyImperfectHomology
+## add_gene
+## add_exon
+## createAnnotatedOutput
+
 import pandas as pd
 from pyensembl import EnsemblRelease
 from pyensembl.exon import Exon
+import logging
 import regex as re
 from ..base import createChrList
 from ..base import rev_compl
@@ -20,7 +30,6 @@ def verifyImperfectHomology(ref, query, min_homology=0.8):
     return(True)
   else:
     return(False)
-
 
 def add_gene(row):
 
@@ -50,23 +59,26 @@ def add_exon(row):
 
   return(out_list) #output
 
-
 def createAnnotatedOutput(f_name, path, output_f_name):
+  import os
 
   chrList=createChrList(25)
   df = pd.DataFrame()
 
   for chr in chrList:
     try:
+      if os.stat(f"{path}{chr}/{f_name}").st_size == 0:
+        print(f"WARNING! File {path}{chr}/{f_name} is empty. Skipping...")
+        continue
       with open(f"{path}{chr}/{f_name}") as f:
         lines = f.readlines()
     except:
-      print(f"Couldn't read {path}{chr}/{f_name}. Make sure it's there.")
+      print(f"WARNING! Couldn't read {path}{chr}/{f_name}. Make sure it's there.")
       lines = None
       continue
 
     if (type(lines) == None):
-      print("Problem")
+      print("WARNING! the type of lines is None. Skipping...")
 
     else:
       print(f"hello {chr}")
@@ -132,12 +144,35 @@ def createAnnotatedOutput(f_name, path, output_f_name):
                         "var17":var17,
                         "var18":var18
                         }
+          
+          #make sure that the ref and bir are not empty, otherwise the movingWindow will fail
+          if (len(var8) == 0) or (len(var9) == 0):
+            print(f"ref or bir are empty for {path}{chr}/{f_name}")
+            print("Cheeck if they run correctly in the original output file...")
+            print("Skipping this event...")
+
+            #print the same messages to the error log
+            logging.basicConfig(filename='error.log', level=logging.DEBUG)
+            logging.debug(f"ref or bir are empty for {path}{chr}/{f_name}")
+            logging.debug("Cheeck if they run correctly in the original output file...")
+            logging.debug("Skipping this event...")
+            continue
+
           event_df = pd.DataFrame.from_records([event_dict])
           df = pd.concat([df, event_df], ignore_index=True)
 
   print("Starting complexity")
-  df[['ref_complexity_fail', 'ref_complexity_score', 'ref_complexity_tree']] = df.apply(lambda row: movingWindow(row.ref, complexity_threshold=0.2), axis=1, result_type ='expand')
-  df[['bir_complexity_fail', 'bir_complexity_score', 'bir_complexity_tree']] = df.apply(lambda row: movingWindow(row.bir, complexity_threshold=0.2), axis=1, result_type ='expand')
+
+  try:
+    df[['ref_complexity_fail', 'ref_complexity_score', 'ref_complexity_tree']] = df.apply(lambda row: movingWindow(row.ref, complexity_threshold=0.2), axis=1, result_type ='expand')
+  except:
+    print(f"Error with ref_complexity for {path}{chr}/{f_name}")
+
+  try:
+    df[['bir_complexity_fail', 'bir_complexity_score', 'bir_complexity_tree']] = df.apply(lambda row: movingWindow(row.bir, complexity_threshold=0.2), axis=1, result_type ='expand')
+  except:
+    print(f"Error with bir_complexity for {path}{chr}/{f_name}")
+
   print("Starting homology check")
   df['homology_check_ref'] = df.apply(lambda row: verifyImperfectHomology(row.ref, row.sBir), axis=1)
   df['homology_check_bir'] = df.apply(lambda row: verifyImperfectHomology(row.bir, row.sBir), axis=1)

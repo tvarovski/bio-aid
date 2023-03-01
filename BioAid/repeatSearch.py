@@ -1,3 +1,13 @@
+# This code was developed and authored by Jerzy Twarowski in Malkova Lab at the University of Iowa 
+# Contact: jerzymateusz-twarowski@uiowa.edu, tvarovski1@gmail.com
+
+## Contents:
+## validateDNASquence
+## imperfectHomologySearch
+## findInvertedRepeat
+## searchSequenceForRepeats
+## saveToJSON
+
 import regex as re
 import json
 
@@ -14,7 +24,6 @@ def validateDNASquence(sequence):
       print("warning, sequence doesn't contain cannonical nucleotides")
       return(False)
   return(True)
-
 
 def imperfectHomologySearch(sequence, query, min_homology=0.8, fixed_errors=False, inverted=True):
 
@@ -37,7 +46,6 @@ def imperfectHomologySearch(sequence, query, min_homology=0.8, fixed_errors=Fals
     return(query_match_pairs)
   else:
     return([])
-
 
 def findInvertedRepeat(sequence, 
                        query_length=4,
@@ -85,7 +93,6 @@ def findInvertedRepeat(sequence,
 
   return(output_pair_list)
     
-
 def searchSequenceForRepeats(sequence,
                              min_query_length=4,
                              max_query_length=25,
@@ -134,7 +141,6 @@ def searchSequenceForRepeats(sequence,
       results_dictionary[query] = [pair[1][0]]
   print("Results were consolidated...")
   return(results_dictionary)
-
 
 def saveToJSON(results_dictionary, output_file_name='json_output.json'):
 
