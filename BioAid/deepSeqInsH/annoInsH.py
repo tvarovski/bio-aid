@@ -8,18 +8,13 @@
 ## trimseq
 ## classify
 
-import sys
-import pysam
 import regex as re
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-from joblib import Parallel, delayed
-
 
 def dataFrameImport(directory,datatype = 'sam'):
+  import pysam
+
   #This function imports all files inside of the specified DIR path into two lists; of panda DF and sample names
   frames_list_samples = []
   sample_names = []
