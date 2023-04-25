@@ -182,30 +182,3 @@ def drawGenomicContext(context_list, show=False, **kwargs):
         plt.show()
 
     plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-import pandas as pd
-#open a csv file to a dataframe
-df = pd.read_csv('test_calls.csv')
-
-#extract the positions from the dataframe
-df = df[df["Type"] == "SNV"]
-df = df[df["Reference"] == 'G']
-
-#extract the positions (as integers) from the dataframe
-df['Region'] = df['Region'].astype(int)
-positions = df[['Chromosome','Region']].values.tolist()
-
-context_list = pullGenomicContext(positions, 'S288C_reference_sequencewoUra3wUra329wNAT.fa', context_flank=4)
-
-drawGenomicContext(context_list, save_path='test.png', show=True)
