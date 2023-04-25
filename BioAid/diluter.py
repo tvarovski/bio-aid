@@ -10,7 +10,7 @@ def calculate_dilution(count_per_square, final_plate):
 
     fourth_dilution_amount = 1000/dilution_factor
 
-    print("\nYou should dilute by using "+str(fourth_dilution_amount)+" of cell culture with "+str(1000-fourth_dilution_amount) + "uL ddH2O \nand then with three steps of 100uL of diluted culture and 900uL ddH2O.\nPlate with 100uL of diluted solution per plate")
+    print(f"\nYou should dilute by using {fourth_dilution_amount} of cell culture with {1000-fourth_dilution_amount}uL ddH2O \nand then with three steps of 100uL of diluted culture and 900uL ddH2O.\nPlate with 100uL of diluted solution per plate")
 
 def dilute():
 

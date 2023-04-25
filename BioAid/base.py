@@ -27,7 +27,7 @@ def extractSeqFromFastaToList(fasta_file_path):
             fasta_list.append([i.strip('>').strip(),''])
         else:
             fasta_list[-1][1] = fasta_list[-1][1]+i.strip()
-    print(f"Extraction of sequence information from {fasta_file_path} finished.")
+    logging.info(f"Extraction of sequence information from {fasta_file_path} finished.")
     return fasta_list
 
 def validateSquence(sequence):
@@ -36,10 +36,10 @@ def validateSquence(sequence):
     bases = "ATGCatgcN"
     for i in sequence:
         if i not in bases:
-            print(f"error, sequence doesn't contain cannonical nucleotides: {i}")
+            logging.info(f"Sequence doesn't contain cannonical nucleotides: {i}")
             return(False)
         if i == "N":
-            print(f"warning, sequence contains 'N's")
+            logging.warning(f"Warning, sequence contains 'N's")
     return(True)
 
 def compl(base):
@@ -90,8 +90,8 @@ def dataFrameImport(directory):
                     print(f'dataframe {sample_names[-1]} has {len(globals()[f"sample{counter}"])} total rows')
                     frames_list_samples.append(globals()[f"sample{counter}"])
                     counter+=1
-    print(f"found {len(frames_list_samples)} samples in {directory}")
-    print(len(sample_names), sample_names)
+    logging.info(f"found {len(frames_list_samples)} samples in {directory}")
+    logging.info(len(sample_names), sample_names)
 
     return(frames_list_samples, sample_names)
 
@@ -103,7 +103,7 @@ def pullGenomicContext(list_of_positions, fasta_file_path, context_flank=5):
     context_list = []
 
     for i in fasta_list:
-        print(f"extracting context from {i[0]}. It has {len(i[1])} bases.")
+        logging.debug(f"extracting context from {i[0]}. It has {len(i[1])} bases.")
         sequence = i[1]
         for j in list_of_positions:
 
@@ -135,6 +135,7 @@ def drawGenomicContext(context_list, show=False, **kwargs):
     If you pass show=True, it will show the plot.
     If you pass save_path=<PATH>, it will save the plot to the path.
     It requires the packages matplotlib.pyplot and panda.s'''
+    
     import matplotlib.pyplot as plt
     import pandas as pd
 
@@ -175,11 +176,23 @@ def drawGenomicContext(context_list, show=False, **kwargs):
 
     if 'save_path' in kwargs:
         plt.savefig(kwargs['save_path'], bbox_inches='tight', dpi=300)
+        logging.info(f"saved plot to {kwargs['save_path']}")
 
     if show == True:
         plt.show()
 
     plt.close()
+
+
+
+
+
+
+
+
+
+
+
 
 import pandas as pd
 #open a csv file to a dataframe

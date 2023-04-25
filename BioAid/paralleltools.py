@@ -7,6 +7,7 @@
 ## clean_up_slices
 
 import pandas as pd
+import logging
 
 def split_df(df, slices_num, *savecsv_path_root):
     #this function splits the df into n=slices_num slices and saves each slice to a csv file
@@ -24,11 +25,11 @@ def split_df(df, slices_num, *savecsv_path_root):
         if savecsv_path_root:
             df_slice_name = f"{savecsv_path_root[0]}_{slice}.csv"
             df_slice.to_csv(df_slice_name, index=False)
-            print(f'Slice {slice} saved to {df_slice_name}')
+            logging.info(f'Slice {slice} saved to {df_slice_name}')
         
         slices_out.append(df_slice)
     
-    print(f'Input df split into {slices_num} slices.')
+    logging.info(f'Input df split into {slices_num} slices.')
     return slices_out
 
 def join_slices(slices_num, slice_path_root, *savecsv_path):
@@ -43,7 +44,7 @@ def join_slices(slices_num, slice_path_root, *savecsv_path):
     
     if savecsv_path:
         df.to_csv(savecsv_path[0], index=False)
-        print(f'Slices joined! Results saved to {savecsv_path[0]}')
+        logging.info(f'Slices joined! Results saved to {savecsv_path[0]}')
     
     return df
 
@@ -54,4 +55,4 @@ def clean_up_slices(slices_num, slice_path_root):
     for slice in range(slices_num):
         os.remove(f"{slice_path_root}_{slice}.csv")
 
-    print(f'Clean up Finished! Deleted slice files.')
+    logging.info(f'Clean up Finished! Deleted slice files.')
