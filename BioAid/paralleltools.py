@@ -9,11 +9,19 @@
 import pandas as pd
 import logging
 
-def split_df(df, slices_num, *savecsv_path_root):
-    #this function splits the df into n=slices_num slices and saves each slice to a csv file
-    #if savecsv_path_root is given, the slices are saved to csv files with the given path root
-    #and the slice number appended to the end of the path
-    #the slices are returned as a list of df
+def split_df(df: pd.DataFrame, slices_num: int, savecsv_path_root=None) -> list:
+    """
+    Splits a pandas DataFrame into n=slices_num slices and saves each slice to a CSV file if a path is provided.
+    Returns a list of the DataFrame slices.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to be split.
+        slices_num (int): The number of slices to create.
+        savecsv_path_root (str): Optional. The root path to save the CSV files. If not provided, the slices are not saved.
+
+    Returns:
+        list: A list of the DataFrame slices.
+    """
 
     from math import ceil
 
@@ -32,10 +40,19 @@ def split_df(df, slices_num, *savecsv_path_root):
     logging.info(f'Input df split into {slices_num} slices.')
     return slices_out
 
-def join_slices(slices_num, slice_path_root, *savecsv_path):
-    #this function combines the results from each slice into one df and saves it
-    #if savecsv_path is given, the df is saved to the given path
-    #the df is returned
+def join_slices(slices_num: int, slice_path_root: str, savecsv_path=None):
+    """
+    Combines the results from each slice into one pandas DataFrame and saves it to a CSV file if a path is provided.
+    Returns the combined DataFrame.
+
+    Args:
+        slices_num (int): The number of slices to combine.
+        slice_path_root (str): The root path to the CSV files for each slice.
+        *savecsv_path (str): Optional. The path to save the combined DataFrame as a CSV file.
+
+    Returns:
+        pandas.DataFrame: The combined DataFrame.
+    """
 
     df = pd.DataFrame()
     for slice in range(slices_num):
@@ -48,10 +65,18 @@ def join_slices(slices_num, slice_path_root, *savecsv_path):
     
     return df
 
-def clean_up_slices(slices_num, slice_path_root):
-    import os
-    #this function deletes the slice files
+def clean_up_slices(slices_num: int, slice_path_root: str) -> None:
+    """
+    Deletes the CSV files for each slice of a DataFrame that was split using the `split_df` function.
 
+    Args:
+        slices_num (int): The number of slices that were created.
+        slice_path_root (str): The root path to the CSV files for each slice.
+
+    Returns:
+        None
+    """
+    import os
     for slice in range(slices_num):
         os.remove(f"{slice_path_root}_{slice}.csv")
 
