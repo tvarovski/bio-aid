@@ -12,10 +12,16 @@
 
 import logging
 
-def extractSeqFromFastaToList(fasta_file_path):
-    '''This function takes a path of a fastafile and extracts all sequence names and
-    sequences into a nested list [[title_0, sequence_0], [title_1, sequence_1],...]'''
+def extractSeqFromFastaToList(fasta_file_path: str) -> list:
+    '''Extracts sequence information from a FASTA file and returns it as a nested list.
 
+    Args:
+        fasta_file_path (str): The path to the FASTA file.
+
+    Returns:
+        list: A nested list of the form [[title_0, sequence_0], [title_1, sequence_1], ...].
+            Each element of the list is a list containing the title and sequence of a sequence in the FASTA file.
+    '''
     fasta_file = open(fasta_file_path, 'r')
     contents = fasta_file.readlines()
     fasta_file.close()
@@ -30,9 +36,18 @@ def extractSeqFromFastaToList(fasta_file_path):
     logging.info(f"Extraction of sequence information from {fasta_file_path} finished.")
     return fasta_list
 
-def validateSquence(sequence):
-    '''Check if the sequence contains viable nucleotides only'''
+def validateSquence(sequence: str) -> bool:
+    '''Checks if a DNA sequence contains only valid nucleotides.
 
+    Args:
+        sequence (str): A DNA sequence to be validated.
+
+    Returns:
+        bool: True if the sequence contains only valid nucleotides, False otherwise.
+            If the sequence contains non-canonical nucleotides, a log message is generated.
+            If the sequence contains 'N's, a warning log message is generated.
+            The log messages are written to the default logger.
+    '''
     bases = "ATGCatgcN"
     for i in sequence:
         if i not in bases:
@@ -42,7 +57,19 @@ def validateSquence(sequence):
             logging.warning(f"Warning, sequence contains 'N's")
     return(True)
 
-def compl(base):
+def compl(base: str) -> str:
+    """
+    Returns the complementary base for a given DNA base.
+
+    Args:
+        base (str): A single character representing a DNA base. Must be one of 'A', 'T', 'G', 'C', or '-'.
+
+    Returns:
+        str: The complementary base for the given DNA base. Returns '-' if the input is '-'.
+
+    Raises:
+        ValueError: If the input is not one of 'A', 'T', 'G', 'C', or '-'.
+    """
     if base == "A":
         return('T')
     elif base == "T":
@@ -53,29 +80,85 @@ def compl(base):
         return('G')
     elif base == "-":
         return('-')
+    else:
+        logging.error(f"Invalid base: {base}")
+        raise ValueError(f"Invalid base: {base}")
 
-def rev_compl(seq):
+def rev_compl(seq: str) -> str:
+    """
+    Returns the reverse complement of a given DNA sequence.
+
+    Args:
+        seq (str): A string representing a DNA sequence. Must only contain characters 'A', 'T', 'G', 'C', or '-'.
+
+    Returns:
+        str: The reverse complement of the given DNA sequence.
+
+    Raises:
+        ValueError: If the input sequence contains characters other than 'A', 'T', 'G', 'C', or '-' (Through compl())
+    """
     new_seq = ""
     for base in seq:
         new_base = compl(base)
         new_seq = new_base + new_seq
     return(new_seq)
 
-def unique(list1):
-    # this function takes a list1 and returns a list2 with
-    # unique elements of list 
+def unique(list1: list) -> list:
+    """
+    Returns a new list containing only the unique elements of the input list.
+
+    Args:
+        list1 (list): A list of elements.
+
+    Returns:
+        list: A new list containing only the unique elements of the input list.
+
+    Examples:
+        >>> unique([1, 2, 3, 2, 1])
+        [1, 2, 3]
+
+        >>> unique(['a', 'b', 'c', 'b', 'a'])
+        ['a', 'b', 'c']
+    """
 
     list_set = set(list1) 
     unique_list = (list(list_set))
     return unique_list
 
-def createChrList(chrNum):
+def createChrList(chrNum: int) -> list:
+    """
+    Creates a list of chromosome names.
+
+    Args:
+        chrNum (int): The number of chromosomes to include in the list.
+
+    Returns:
+        list: A list of chromosome names, where each name is a string of the form "chrX", where X is the chromosome number.
+
+    Examples:
+        >>> createChrList(3)
+        ['chr1', 'chr2', 'chr3']
+
+        >>> createChrList(5)
+        ['chr1', 'chr2', 'chr3', 'chr4', 'chr5']
+    """
     chrList = []
     for i in range(chrNum):
         chrList.append(f"chr{i+1}")
     return(chrList)
 
-def dataFrameImport(directory):
+def dataFrameImport(directory: str) -> tuple:
+    """
+    Imports all TSV files in a directory as Pandas dataframes.
+
+    Args:
+        directory (str): The path to the directory containing the TSV files.
+
+    Returns:
+        tuple: A tuple containing two elements:
+            - A list of Pandas dataframes, where each dataframe corresponds to a TSV file in the directory.
+            - A list of sample names, where each name is a string representing the name of the corresponding TSV file.
+    """
     import os
     import pandas as pd
     frames_list_samples = []
@@ -95,10 +178,22 @@ def dataFrameImport(directory):
 
     return(frames_list_samples, sample_names)
 
-def pullGenomicContext(list_of_positions, fasta_file_path, context_flank=5):
-    '''This function takes a list of positions [chromosome, position] and a fasta file path and returns a list of
-    genomic context of the specified length around each position'''
+def pullGenomicContext(list_of_positions: list, fasta_file_path: str, context_flank: int = 5) -> list:
+    """
+    Extracts genomic context of a specified length around each position in a list of positions.
 
+    Args:
+        list_of_positions (list): A list of positions, where each position is a list of two elements: the chromosome name and the position.
+        fasta_file_path (str): The path to the FASTA file containing the reference genome.
+        context_flank (int, optional): The length of the context to extract on either side of each position. Defaults to 5.
+
+    Returns:
+        list: A list of genomic contexts, where each context is a list of four elements:
+            - The sequence of bases to the left of the position.
+            - The query base at the position.
+            - The sequence of bases to the right of the position.
+            - The chromosome name.
+    """
     fasta_list = extractSeqFromFastaToList(fasta_file_path)
     context_list = []
 
@@ -130,11 +225,26 @@ def pullGenomicContext(list_of_positions, fasta_file_path, context_flank=5):
 
     return(context_list)
 
-def drawGenomicContext(context_list, show=False, **kwargs):
-    '''This function takes a list of genomic contexts and draws a sequence logo of the context.
-    If you pass show=True, it will show the plot.
-    If you pass save_path=<PATH>, it will save the plot to the path.
-    It requires the packages matplotlib.pyplot and panda.s'''
+def drawGenomicContext(context_list: list, show: bool = False, **kwargs: dict) -> None:
+    '''
+    Draws a sequence logo of a list of genomic contexts.
+
+    Args:
+        context_list (list): A list of genomic contexts, where each context is a list of four elements:
+            - The sequence of bases to the left of the position.
+            - The query base at the position.
+            - The sequence of bases to the right of the position.
+            - The chromosome name.
+        show (bool, optional): Whether to show the plot. Defaults to False.
+        **kwargs (dict): Additional keyword arguments to pass to the function. Supported arguments include:
+            - save_path (str): The path to save the plot to.
+
+    Returns:
+        None
+
+    Raises:
+        ImportError: If the required packages matplotlib.pyplot and pandas are not installed.
+    '''
     
     import matplotlib.pyplot as plt
     import pandas as pd
@@ -169,7 +279,7 @@ def drawGenomicContext(context_list, show=False, **kwargs):
     
     #plot the dataframe as a stacked barplot
     column_count = len(df_context_freq.columns) #count the number of columns
-    df_context_freq.plot.bar(stacked=True, figsize=(column_count+3,4), color=colors.values())
+    df_context_freq.plot.bar(stacked=True, figsize=(column_count+3,4), color = list(colors.values()))
     plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
     plt.ylabel('Frequency (%)')
     plt.xlabel('Relative Position')
