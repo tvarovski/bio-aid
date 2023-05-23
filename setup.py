@@ -3,7 +3,7 @@ import codecs
 import os
 
 
-VERSION = '0.2.2'
+VERSION = '0.3.0'
 DESCRIPTION = 'Genetic Analysis Tools'
 LONG_DESCRIPTION = 'A package that contains tools for the analysis of genetic sequence and sequencing related data'
 
@@ -21,7 +21,7 @@ setup(
     keywords=['python', 'biology', 'bio', 'genetics', 'genomics', 'NGS'],
     classifiers=[
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
