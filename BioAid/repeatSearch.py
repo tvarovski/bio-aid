@@ -8,8 +8,6 @@
 ## searchSequenceForRepeats
 ## saveToJSON
 
-import regex as re
-
 #from .base import validateSquence
 from .base import rev_compl
 
@@ -32,7 +30,7 @@ def validateDNASquence(sequence: str) -> bool:
             return(False)
     return(True)
 
-def imperfectHomologySearch(sequence: str, query: str, min_homology: float = 0.8, fixed_errors: bool = False, inverted:bool = True) -> list:
+def imperfectHomologySearch(sequence: str, query: str, min_homology: float = 0.8, fixed_errors: bool = False, inverted: bool = True, silent: bool = False) -> list:
     '''
     Search for a query sequence in a given DNA sequence, allowing for a certain number of mismatches/imperfect homology.
 
@@ -46,6 +44,7 @@ def imperfectHomologySearch(sequence: str, query: str, min_homology: float = 0.8
     Returns:
         list: a list of query-match pairs, where each pair is a list containing the query sequence and a list of matching sequences.
     '''
+    import regex as re
     errors = 0
     if min_homology:
         errors = round(len(query)*(1-min_homology))
@@ -61,8 +60,11 @@ def imperfectHomologySearch(sequence: str, query: str, min_homology: float = 0.8
     query_match_pairs=[query, output_list]
     if len(output_list) > 0:
         if len(output_list) > 1:
-            print("This is unusual...")
-        print(f'Found possible template(s) for {query}: {output_list}')
+            if not silent:
+                print(f"This is unusual... Found more than one match ({len(output_list)}) for the query...")
+        
+        if not silent:
+            print(f'Found possible template(s) for {query}: {output_list}')
         return(query_match_pairs)
     else:
         return([])
