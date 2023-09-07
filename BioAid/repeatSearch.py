@@ -40,6 +40,7 @@ def imperfectHomologySearch(sequence: str, query: str, min_homology: float = 0.8
         min_homology (float, optional): the minimum homology (similarity) between the query and the found sequence, as a fraction between 0 and 1. Defaults to 0.8.
         fixed_errors (bool, optional): if True, use a fixed number of errors instead of calculating it from min_homology. Defaults to False.
         inverted (bool, optional): if True, search for the reverse complement of the query sequence as well. Defaults to True.
+        silent (bool, optional): if True, don't print any messages. Defaults to False.
 
     Returns:
         list: a list of query-match pairs, where each pair is a list containing the query sequence and a list of matching sequences.
