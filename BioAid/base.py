@@ -12,6 +12,9 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 def extractSeqFromFastaToList(fasta_file_path: str) -> list:
     '''Extracts sequence information from a FASTA file and returns it as a nested list.
 
@@ -33,8 +36,23 @@ def extractSeqFromFastaToList(fasta_file_path: str) -> list:
             fasta_list.append([i.strip('>').strip(),''])
         else:
             fasta_list[-1][1] = fasta_list[-1][1]+i.strip()
-    logging.info(f"Extraction of sequence information from {fasta_file_path} finished.")
+    logger.info(f"Extraction of sequence information from {fasta_file_path} finished.")
     return fasta_list
+
+def getSequenceLengths(fasta_list: list) -> dict:
+    '''Calculates the length of each sequence in a nested list of FASTA sequences.
+
+    Args:
+        fasta_list (list): A nested list of the form [[title_0, sequence_0], [title_1, sequence_1], ...].
+            Each element of the list is a list containing the title and sequence of a sequence in the FASTA file.
+
+    Returns:
+        dict: A dictionary where the keys are the titles of the sequences and the values are the lengths of the sequences.
+    '''
+    length_dict = {}
+    for i in fasta_list:
+        length_dict[i[0]] = len(i[1])
+    return length_dict
 
 def validateSquence(sequence: str) -> bool:
     '''Checks if a DNA sequence contains only valid nucleotides.
@@ -51,10 +69,10 @@ def validateSquence(sequence: str) -> bool:
     bases = "ATGCatgcN"
     for i in sequence:
         if i not in bases:
-            logging.info(f"Sequence doesn't contain cannonical nucleotides: {i}")
+            logger.info(f"Sequence doesn't contain cannonical nucleotides: {i}")
             return(False)
         if i == "N":
-            logging.warning(f"Warning, sequence contains 'N's")
+            logger.warning(f"Warning, sequence contains 'N's")
     return(True)
 
 def compl(base: str) -> str:
@@ -81,7 +99,7 @@ def compl(base: str) -> str:
     elif base == "-":
         return('-')
     else:
-        logging.error(f"Invalid base: {base}")
+        logger.error(f"Invalid base: {base}")
         raise ValueError(f"Invalid base: {base}")
 
 def rev_compl(seq: str) -> str:
@@ -173,8 +191,8 @@ def dataFrameImport(directory: str) -> tuple:
                     print(f'dataframe {sample_names[-1]} has {len(globals()[f"sample{counter}"])} total rows')
                     frames_list_samples.append(globals()[f"sample{counter}"])
                     counter+=1
-    logging.info(f"found {len(frames_list_samples)} samples in {directory}")
-    logging.info(len(sample_names), sample_names)
+    logger.info(f"found {len(frames_list_samples)} samples in {directory}")
+    logger.info(len(sample_names), sample_names)
 
     return(frames_list_samples, sample_names)
 
@@ -198,7 +216,7 @@ def pullGenomicContext(list_of_positions: list, fasta_file_path: str, context_fl
     context_list = []
 
     for i in fasta_list:
-        logging.debug(f"extracting context from {i[0]}. It has {len(i[1])} bases.")
+        logger.debug(f"extracting context from {i[0]}. It has {len(i[1])} bases.")
         sequence = i[1]
         for j in list_of_positions:
 
@@ -214,7 +232,7 @@ def pullGenomicContext(list_of_positions: list, fasta_file_path: str, context_fl
                 query_base = sequence[j-1]
 
             except:
-                logging.warning(f"position {j} not found in {i[0]}. Skipping...")
+                logger.warning(f"position {j} not found in {i[0]}. Skipping...")
                 continue
 
             #extract the context
@@ -286,7 +304,7 @@ def drawGenomicContext(context_list: list, show: bool = False, **kwargs: dict) -
 
     if 'save_path' in kwargs:
         plt.savefig(kwargs['save_path'], bbox_inches='tight', dpi=300)
-        logging.info(f"saved plot to {kwargs['save_path']}")
+        logger.info(f"saved plot to {kwargs['save_path']}")
 
     if show == True:
         plt.show()

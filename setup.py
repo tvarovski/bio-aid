@@ -3,16 +3,19 @@ import codecs
 import os
 
 
-VERSION = '0.3.1'
+VERSION = '0.3.2'
 DESCRIPTION = 'Genetic Analysis Tools'
-LONG_DESCRIPTION = 'A package that contains tools for the analysis of genetic sequence and sequencing related data'
+
+with codecs.open("README.md", encoding="utf-8") as f:
+    LONG_DESCRIPTION = f.read()
 
 # Setting up
 setup(
     name="bio-aid",
     version=VERSION,
     author="tvarovski (Jerzy Twarowski)",
-    author_email="<tvarovski1@gmail.com>",
+    author_email="tvarovski1@gmail.com",
+    url="https://github.com/tvarovski/bio-aid",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,

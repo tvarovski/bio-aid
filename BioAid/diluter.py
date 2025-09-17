@@ -20,6 +20,8 @@ def calculate_dilution(count_per_square: int|float, final_plate: int|float) -> N
         Plate with 100uL of diluted solution per plate
     """
     init_cells_ml = (count_per_square/4.0)*10**6
+    print(f"Your culture has a cell concentration of {init_cells_ml:.3E} cells/mL.")
+
     final_cells_ml = final_plate*10
 
     dilution_factor = init_cells_ml/final_cells_ml
@@ -76,3 +78,6 @@ def dilute() -> None:
         final_cells = float(final_cells)
 
         calculate_dilution(initial_cells,final_cells)
+
+if __name__ == "__main__":
+    dilute()

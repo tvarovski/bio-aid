@@ -9,6 +9,9 @@ import multiprocessing
 from math import ceil
 import pandas as pd
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 def splitDF(df: pd.DataFrame, slices_num: int, savecsv_path_root=None) -> list:
     """
     Splits a pandas DataFrame into n=slices_num slices and saves each slice to a CSV file if a path is provided.
@@ -30,11 +33,11 @@ def splitDF(df: pd.DataFrame, slices_num: int, savecsv_path_root=None) -> list:
         if savecsv_path_root:
             df_slice_name = f"{savecsv_path_root[0]}_{slice}.csv"
             df_slice.to_csv(df_slice_name, index=False)
-            logging.info(f'Slice {slice} saved to {df_slice_name}')
+            logger.info(f'Slice {slice} saved to {df_slice_name}')
         
         slices_out.append(df_slice)
     
-    logging.info(f'Input df split into {slices_num} slices.')
+    logger.info(f'Input df split into {slices_num} slices.')
     return slices_out
 
 def joinSlices(slices_num: int, slice_path_root: str, savecsv_path=None) -> pd.DataFrame:
@@ -57,7 +60,7 @@ def joinSlices(slices_num: int, slice_path_root: str, savecsv_path=None) -> pd.D
     
     if savecsv_path:
         df.to_csv(savecsv_path[0], index=False)
-        logging.info(f'Slices joined! Results saved to {savecsv_path[0]}')
+        logger.info(f'Slices joined! Results saved to {savecsv_path[0]}')
     
     return df
 
@@ -72,10 +75,10 @@ def cleanUpSlices(slices_num: int, slice_path_root: str) -> None:
     Returns:
         None
     """
-    logging.info('Combining results from each slice...')
+    logger.info('Combining results from each slice...')
     for slice in range(slices_num):
         os.remove(f"{slice_path_root}_{slice}.csv")
-    logging.info(f'Clean up Finished! Deleted slice files.')
+    logger.info(f'Clean up Finished! Deleted slice files.')
 
 def runScriptSubprocess(args: tuple[str, str]) -> None:
     """
@@ -108,27 +111,27 @@ def runMainPool(script_path: str, results_df_path: str, num_processes: int = 8, 
         results_df_name = os.path.basename(results_df_path)[:-4]
 
         # split the df into n=num_processes slices and save each slice to a csv file
-        logging.info(f'Splitting {results_df_name} into {num_processes} slices...')
+        logger.info(f'Splitting {results_df_name} into {num_processes} slices...')
         splitDF(df, num_processes, results_df_name)
 
         # run the script in parallel on each slice
-        logging.info(f'Running {script_path} in parallel on {num_processes} slices...')
+        logger.info(f'Running {script_path} in parallel on {num_processes} slices...')
         pool = multiprocessing.Pool(processes=num_processes)
         pool.map(runScriptSubprocess, [(f"{results_df_name}_{slice}.csv", script_path) for slice in range(num_processes)])
         pool.close()
         pool.join()
-        logging.info(f'Finished {num_processes} processes...')
+        logger.info(f'Finished {num_processes} processes...')
 
         # join the results from each slice into one DataFrame and save it to a CSV file
         joint_path = f'{results_df_name}_{joint_name}.csv'
-        logging.info(f'Joining results from {num_processes} slices into {joint_path}...')
+        logger.info(f'Joining results from {num_processes} slices into {joint_path}...')
         joinSlices(num_processes, results_df_name, joint_path)
 
         # clean up the slice files
-        logging.info(f'Cleaning up slice files for {results_df_name}...')
+        logger.info(f'Cleaning up slice files for {results_df_name}...')
         cleanUpSlices(num_processes, results_df_name)
 
-    logging.info(f'Finished processing {results_df_name}.')
+    logger.info(f'Finished processing {results_df_name}.')
 
 def parseArguments() -> argparse.Namespace:
     """
@@ -160,17 +163,17 @@ def parseArguments() -> argparse.Namespace:
 
 def main() -> None:
     """
-    This function is the entry point of the program. It sets up logging, and calls the function to run the main pool of processes.
+    This function is the entry point of the program. It sets up logger, and calls the function to run the main pool of processes.
 
     Returns:
     None
     """
     args = parseArguments()
 
-    logging.info(f'Running {args.target} on {args.results_df_path} in parallel on {args.num_processes} processes...')
+    logger.info(f'Running {args.target} on {args.results_df_path} in parallel on {args.num_processes} processes...')
     runMainPool(args.target, args.results_df_path, num_processes=args.num_processes)
-    logging.info(f'Finished running {args.target} on {args.results_df_path} in parallel on {args.num_processes} processes...')
-    logging.info(f'Output saved to {args.results_df_path[:-4]}_all.csv')
+    logger.info(f'Finished running {args.target} on {args.results_df_path} in parallel on {args.num_processes} processes...')
+    logger.info(f'Output saved to {args.results_df_path[:-4]}_all.csv')
 
 if __name__ == "__main__":
     main()
